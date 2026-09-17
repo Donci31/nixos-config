@@ -90,33 +90,33 @@
   # Starship
   programs.starship = {
     enable = true;
-    enableNushellIntegration = false;
+    enableNushellIntegration = true;
   };
   xdg.configFile."starship.toml".source = "${dotfiles}/starship/starship.toml";
 
   # Zoxide
   programs.zoxide = {
     enable = true;
-    enableNushellIntegration = false;
+    enableNushellIntegration = true;
   };
 
   # Carapace
   programs.carapace = {
     enable = true;
-    enableNushellIntegration = false;
+    enableNushellIntegration = true;
   };
 
   # Atuin
   programs.atuin = {
     enable = true;
-    enableNushellIntegration = false;
+    enableNushellIntegration = true;
   };
 
   # Nushell
   programs.nushell = {
     enable = true;
-    configFile.source = "${dotfiles}/nushell/config.nu";
-    envFile.source = "${dotfiles}/nushell/env.nu";
+    configFile.source = "${dotfiles}/nushell/nix/config.nu";
+    envFile.source = "${dotfiles}/nushell/nix/env.nu";
   };
 
   # Nushell helper scripts
@@ -126,7 +126,7 @@
   # Yazi & Dracula theme
   programs.yazi = {
     enable = true;
-    enableNushellIntegration = false;
+    enableNushellIntegration = true;
   };
   xdg.configFile."yazi/yazi.toml".source = "${dotfiles}/yazi/yazi.toml";
   xdg.configFile."yazi/keymap.toml".source = "${dotfiles}/yazi/keymap.toml";
@@ -139,6 +139,7 @@
   # Direnv
   programs.direnv = {
     enable = true;
+    enableNushellIntegration = true;
     nix-direnv.enable = true;
   };
 }
