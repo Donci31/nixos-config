@@ -10,7 +10,6 @@
     # Core CLI utilities
     fd
     ripgrep
-    bat
     eza
     fzf
     jq
@@ -23,7 +22,6 @@
     ffmpegthumbnailer
 
     # VCS
-    jujutsu
     lazygit
 
     # Dev runtimes & toolchains
@@ -92,26 +90,26 @@
   # Starship
   programs.starship = {
     enable = true;
-    enableNushellIntegration = true;
+    enableNushellIntegration = false;
   };
   xdg.configFile."starship.toml".source = "${dotfiles}/starship/starship.toml";
 
   # Zoxide
   programs.zoxide = {
     enable = true;
-    enableNushellIntegration = true;
+    enableNushellIntegration = false;
   };
 
   # Carapace
   programs.carapace = {
     enable = true;
-    enableNushellIntegration = true;
+    enableNushellIntegration = false;
   };
 
   # Atuin
   programs.atuin = {
     enable = true;
-    enableNushellIntegration = true;
+    enableNushellIntegration = false;
   };
 
   # Nushell
@@ -133,7 +131,7 @@
   xdg.configFile."yazi/yazi.toml".source = "${dotfiles}/yazi/yazi.toml";
   xdg.configFile."yazi/keymap.toml".source = "${dotfiles}/yazi/keymap.toml";
   xdg.configFile."yazi/theme.toml".source = "${dotfiles}/yazi/theme.toml";
-  xdg.configFile."yazi/flavors/dracula.yazi".source = ./flavors/dracula.yazi;
+  xdg.configFile."yazi/flavors/dracula.yazi".source = "${dotfiles}/yazi/flavors/dracula.yazi";
 
   # Pgcli
   xdg.configFile."pgcli/config".source = "${dotfiles}/pgcli/config";
