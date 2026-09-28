@@ -10,16 +10,16 @@
     # Core CLI utilities
     fd
     ripgrep
-    eza
     fzf
     jq
     xh
     fastfetch
     tree-sitter
     duckdb
+
+    # Yazi preview dependencies
     poppler-utils
     chafa
-    ffmpegthumbnailer
 
     # VCS
     lazygit
@@ -27,25 +27,14 @@
     # Dev runtimes & toolchains
     uv
     python3
-    bun
     nodejs_24
-    rustup
-    zig
-    go
     awscli2
-    kubectl
-    pandoc
     gcc
     gnumake
     unzip
 
     # Media & processing
     ffmpeg-full
-    imagemagick
-    mpv
-
-    # Container tools
-    podman-compose
   ];
 
   # Git configuration
@@ -57,21 +46,6 @@
         email = "82709410+Donci31@users.noreply.github.com";
       };
       init.defaultBranch = "main";
-    };
-    ignores = [
-      "**/.claude/settings.local.json"
-    ];
-  };
-
-  # Jujutsu configuration
-  programs.jujutsu = {
-    enable = true;
-    settings = {
-      user = {
-        name = "Donci31";
-        email = "82709410+Donci31@users.noreply.github.com";
-      };
-      ui.editor = "nvim";
     };
   };
 
@@ -135,11 +109,4 @@
 
   # Pgcli
   xdg.configFile."pgcli/config".source = "${dotfiles}/pgcli/config";
-
-  # Direnv
-  programs.direnv = {
-    enable = true;
-    enableNushellIntegration = true;
-    nix-direnv.enable = true;
-  };
 }
