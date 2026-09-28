@@ -38,23 +38,24 @@ nixos-config/
    ```
    *(Or select **NixOS** from Windows Terminal profile dropdown or launch it from the Start Menu).*
 
-### 2. Clone Repository to `/etc/nixos`
+### 2. Clone Repository to `~/.config/nixos`
 
-Inside the NixOS WSL shell:
+Inside your NixOS WSL shell:
 
 ```bash
-# Back up any default configuration
-sudo mv /etc/nixos /etc/nixos.bak 2>/dev/null
+# Clone directly into user space (no root/sudo needed for Git)
+git clone https://github.com/Donci31/nixos-config.git ~/.config/nixos
 
-# Clone this configuration repository
-sudo git clone https://github.com/Donci31/nixos-config.git /etc/nixos
-cd /etc/nixos
+# (Optional, Recommended) Symlink /etc/nixos to point to your user repo
+sudo rm -rf /etc/nixos
+sudo ln -s /home/nixos/.config/nixos /etc/nixos
 ```
 
 ### 3. Build and Switch
 
 ```bash
-sudo nixos-rebuild switch --flake /etc/nixos#nixos
+sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
+# (or simply 'sudo nixos-rebuild switch' if /etc/nixos is symlinked)
 ```
 
 ### 4. Restart WSL Session
@@ -76,7 +77,8 @@ wsl -d NixOS
 Rebuild and activate configuration changes:
 
 ```bash
-sudo nixos-rebuild switch --flake /etc/nixos#nixos
+sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
+# (or 'sudo nixos-rebuild switch' if symlinked)
 ```
 
 ### Test Build (Dry Run)
@@ -84,7 +86,7 @@ sudo nixos-rebuild switch --flake /etc/nixos#nixos
 Compile the configuration without applying it to verify syntax and derivations (generates a `./result` symlink):
 
 ```bash
-sudo nixos-rebuild build --flake /etc/nixos#nixos --show-trace
+sudo nixos-rebuild build --flake ~/.config/nixos#nixos --show-trace
 ```
 
 ### Update Flake Inputs
@@ -92,14 +94,14 @@ sudo nixos-rebuild build --flake /etc/nixos#nixos --show-trace
 Update all inputs (`nixpkgs`, `nixos-wsl`, `home-manager`, `dotfiles`):
 
 ```bash
-sudo nix flake update --flake /etc/nixos
+nix flake update --flake ~/.config/nixos
 ```
 
 Update only the `dotfiles` input (e.g. after pushing dotfiles changes to GitHub):
 
 ```bash
-sudo nix flake update dotfiles --flake /etc/nixos
-sudo nixos-rebuild switch --flake /etc/nixos#nixos
+nix flake update dotfiles --flake ~/.config/nixos
+sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
 ```
 
 ### Local Dotfiles Testing (Override Input)
@@ -107,7 +109,7 @@ sudo nixos-rebuild switch --flake /etc/nixos#nixos
 To test changes from your local Windows dotfiles checkout without pushing to GitHub first:
 
 ```bash
-sudo nixos-rebuild switch --flake /etc/nixos#nixos --override-input dotfiles path:/mnt/c/Users/szige/.dotfiles
+sudo nixos-rebuild switch --flake ~/.config/nixos#nixos --override-input dotfiles path:/mnt/c/Users/szige/.dotfiles
 ```
 
 ---
