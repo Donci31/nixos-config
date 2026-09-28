@@ -24,47 +24,87 @@ nixos-config/
 
 ### 1. Install NixOS-WSL
 
-1. Download `nixos.wsl` from the [latest release](https://github.com/nix-community/NixOS-WSL/releases/latest).
-2. Install the distribution:
-   - **Explorer**: If you have WSL version 2.4.4 or later, open (double-click) the `.wsl` file to install it.
-   - **PowerShell / Nushell**:
-     ```powershell
-     wsl --install --from-file path\to\nixos.wsl
-     ```
-     *(Use `--name` to customize the distro name and `--location` to customize the disk image storage directory).*
-3. Open your NixOS shell:
-   ```powershell
-   wsl -d NixOS
-   ```
-   *(Or select **NixOS** from Windows Terminal profile dropdown or launch it from the Start Menu).*
+Download `nixos.wsl` from the [latest release](https://github.com/nix-community/NixOS-WSL/releases/latest).
 
-### 2. Clone Repository to `~/.config/nixos`
+If you have WSL version 2.4.4 or later, open (double-click) the `.wsl` file in Windows Explorer, or run:
 
-Inside your NixOS WSL shell:
+```powershell
+wsl --install --from-file path\to\nixos.wsl
+```
+
+Open your NixOS shell:
+
+```powershell
+wsl -d NixOS
+```
+
+---
+
+### 2. Enter Temporary Shell with Git
+
+A minimal fresh NixOS-WSL installation does not include `git` by default. Launch a temporary shell containing `git`:
 
 ```bash
-# Clone directly into user space (no root/sudo needed for Git)
-git clone https://github.com/Donci31/nixos-config.git ~/.config/nixos
+nix-shell -p git
+```
 
-# (Optional, Recommended) Symlink /etc/nixos to point to your user repo
+---
+
+### 3. Clone Repository to `~/.config/nixos`
+
+Inside the `nix-shell`, clone the repository into your user config directory:
+
+```bash
+git clone https://github.com/Donci31/nixos-config.git ~/.config/nixos
+```
+
+Exit the temporary `nix-shell` (Git will be installed permanently by the flake):
+
+```bash
+exit
+```
+
+(Optional, Recommended) Remove the default `/etc/nixos` folder:
+
+```bash
 sudo rm -rf /etc/nixos
+```
+
+Create a symlink from `/etc/nixos` to your user configuration:
+
+```bash
 sudo ln -s /home/nixos/.config/nixos /etc/nixos
 ```
 
-### 3. Build and Switch
+---
+
+### 4. Build and Switch
+
+Rebuild and activate the configuration:
 
 ```bash
 sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
-# (or simply 'sudo nixos-rebuild switch' if /etc/nixos is symlinked)
 ```
 
-### 4. Restart WSL Session
+*(Or simply run the following if `/etc/nixos` was symlinked):*
 
-To ensure the default shell (`nushell`) and all environment variables take effect across sessions, restart the instance from Windows:
+```bash
+sudo nixos-rebuild switch
+```
 
-```nu
-# In Windows Nushell / PowerShell:
+---
+
+### 5. Restart WSL Session
+
+Terminate the instance from Windows (PowerShell / Nushell) to ensure the default shell (`nushell`) and environment variables take effect:
+
+```powershell
 wsl --terminate NixOS
+```
+
+Start your NixOS environment:
+
+```powershell
 wsl -d NixOS
 ```
 
@@ -78,8 +118,15 @@ Rebuild and activate configuration changes:
 
 ```bash
 sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
-# (or 'sudo nixos-rebuild switch' if symlinked)
 ```
+
+*(Or from anywhere if `/etc/nixos` is symlinked):*
+
+```bash
+sudo nixos-rebuild switch
+```
+
+---
 
 ### Test Build (Dry Run)
 
@@ -89,6 +136,8 @@ Compile the configuration without applying it to verify syntax and derivations (
 sudo nixos-rebuild build --flake ~/.config/nixos#nixos --show-trace
 ```
 
+---
+
 ### Update Flake Inputs
 
 Update all inputs (`nixpkgs`, `nixos-wsl`, `home-manager`, `dotfiles`):
@@ -97,16 +146,23 @@ Update all inputs (`nixpkgs`, `nixos-wsl`, `home-manager`, `dotfiles`):
 nix flake update --flake ~/.config/nixos
 ```
 
-Update only the `dotfiles` input (e.g. after pushing dotfiles changes to GitHub):
+Update only the `dotfiles` input (e.g. after pushing changes to your dotfiles repo):
 
 ```bash
 nix flake update dotfiles --flake ~/.config/nixos
+```
+
+Apply the updated inputs:
+
+```bash
 sudo nixos-rebuild switch --flake ~/.config/nixos#nixos
 ```
 
+---
+
 ### Local Dotfiles Testing (Override Input)
 
-To test changes from your local Windows dotfiles checkout without pushing to GitHub first:
+Test changes from your local Windows dotfiles checkout without pushing to GitHub first:
 
 ```bash
 sudo nixos-rebuild switch --flake ~/.config/nixos#nixos --override-input dotfiles path:/mnt/c/Users/szige/.dotfiles
@@ -132,9 +188,10 @@ sudo nixos-rebuild switch --flake ~/.config/nixos#nixos --override-input dotfile
 ## Troubleshooting
 
 ### Uncommitted Flake Files
-Nix Flakes only read files tracked by Git. If you add new `.nix` files or configs, stage them before rebuilding:
+Nix Flakes only evaluate files tracked by Git. If you add new `.nix` files or assets, stage them before rebuilding:
+
 ```bash
-git -C /etc/nixos add -A
+git -C ~/.config/nixos add -A
 ```
 
 ### Sourcing Custom Nushell Scripts (`extra.nu`)
