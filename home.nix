@@ -46,6 +46,10 @@
         email = "82709410+Donci31@users.noreply.github.com";
       };
       init.defaultBranch = "main";
+      core = {
+        autocrlf = "input";
+        eol = "lf";
+      };
     };
   };
 
