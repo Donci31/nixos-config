@@ -50,9 +50,6 @@
         autocrlf = "input";
         eol = "lf";
       };
-      safe = {
-        directory = [ "/etc/nixos" ];
-      };
     };
   };
 
